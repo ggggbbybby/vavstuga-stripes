@@ -36,7 +36,7 @@
 <script type="text/javascript">
   let colors = {{ site.data.cottolin.colors | jsonify }};
   let color_name = function(color_code) {
-    colors.find(function(c) { return c.code == color_code; });
+    return colors.find(function(c) { return c.code == color_code; }).name;
   };
 
   let bg = function(color) {
