@@ -1,0 +1,92 @@
+<style>
+    {% include swatches.css %}
+</style>
+<h2> Yarn: Cottolin </h2>
+<h3> Stripe Pattern: {{page.pattern_name}} </h3>
+
+<div class="flex-container stripes">
+  {% for stripe in page.stripes %}
+  <span class="color-{{stripe.color}} width-{{stripe.width}}"></span>
+  {% endfor %}
+</div>
+
+<p>
+  <a href="#" id="reset-defaults">
+    Reset Default Colors
+  </a>
+</p>
+<script type="text/javascript">
+  var defaults = {{page.colors | jsonify}};
+</script>
+
+<div id="targets">
+    {% for color in page.colors %}
+    <label class="color">
+        Color {{color[0] | upcase}}
+        <div class="target" data-stripe="{{color[0]}}"></div>
+        <div class="color-code" data-stripe="{{color[0]}}"></div>
+        <div class="color-name" data-stripe="{{color[0]}}"></div>
+    </label>
+    {% endfor %}
+</div>
+<div id="swatches">
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+  let colors = {{ site.data.cottolin.colors | jsonify }};
+  let color_name = function(color_code) {
+    colors.find(function(c) { return c.code == color_code; });
+  };
+
+  let bg = function(color) {
+    return `url("https://store.vavstuga.com/mm5/graphics/00000001/th-yarn-bock-cot-lin-22-2-${color}.jpg")`
+  };
+
+  let pickColor = function(stripe, color) {
+    var bgColor = bg(color);
+    $(`.target[data-stripe="${stripe}"]`).css('background-image', bgColor);
+    $(`.color-code[data-stripe="${stripe}"]`).html(`#${color}`);
+    $(`.color-name[data-stripe="${stripe}"]`).html(color_name(color));
+    $(`.color-${stripe}`).css('background-image', bgColor);
+  };
+
+  let noop = function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  let dragStart = function(e) {
+    e.originalEvent.dataTransfer.effectAllowed = 'copy';
+    e.originalEvent.dataTransfer.setData("text/plain", e.target.dataset.color);
+  };
+
+  let drop = function(e) {
+    noop(e);
+    e.originalEvent.dataTransfer.dropEffect = 'copy';
+    var color = e.originalEvent.dataTransfer.getData("text");
+    var stripe = $(e.target).data('stripe');
+    pickColor(stripe, color);
+  };
+
+  $('.target').bind('dragover', noop);
+  $('.target').bind('dragenter', noop);
+  $('.target').bind('drop', drop);
+
+  let createSwatch = function(indx, color) {
+    var swatch = $('<div class="swatch"></div>');
+    swatch.attr('data-color', color.code);
+    swatch.css('background-image', bg(color.code));
+    swatch.attr('draggable', true);
+    swatch.bind('dragstart', dragStart);
+    swatch.attr('title', color.name);
+    $('#swatches').append(swatch);
+  };
+  $.each(colors, createSwatch);
+
+  let setDefaults = function() {
+    $.each(defaults, pickColor);
+  };
+  setDefaults();
+  $('#reset-defaults').click(setDefaults);
+</script>

@@ -1,0 +1,56 @@
+#swatches {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#targets {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 25px;
+}
+
+.swatch {
+    width: 70px;
+    height: 70px;
+}
+
+.target {
+    width: 70px;
+    height: 70px;
+    border: 1px dashed black;
+    margin-right: 25px;
+}
+
+label.color {
+    padding: 10px;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.stripes span {
+    height: 250px;
+}
+
+.width-1 {
+    width: 10em;
+}
+
+.width-2 {
+    width: 20em;
+}
+
+.width-3 {
+    width: 30em;
+}
+
+.width-4 {
+    width: 40em;
+}
+
+.width-5 {
+    width: 50em;
+}
