@@ -1,5 +1,6 @@
 ---
-layout: cottolin
+layout: stripes
+yarn: cottolin
 pattern_name: Swedish Kitchen
 colors:
   a: 2023

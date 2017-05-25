@@ -1,0 +1,9 @@
+<h2> Yarn: {{include.yarn.name}} </h2>
+
+<script type="text/javascript">
+  // woohoo globals :(
+  let bg = function(color) {
+    return `url("https://store.vavstuga.com/mm5/graphics/00000001/{{include.yarn.slug}}-${color}.jpg")`
+  };
+  let colors = {{ include.yarn.colors | jsonify }};
+</script>

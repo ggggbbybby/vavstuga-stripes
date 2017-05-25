@@ -1,10 +1,11 @@
 ---
-layout: cottolin
+layout: stripes
+yarn: 16_1_linen
 pattern_name: Anna Towels
 colors:
-  a: 2000
-  b: 2008
-  c: 2030
+  a: blch-2
+  b: '2030'
+  c: '0138'
 stripes:
   - color: a
     width: 1

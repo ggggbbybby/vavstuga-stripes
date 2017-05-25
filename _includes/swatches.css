@@ -16,6 +16,11 @@
     height: 70px;
 }
 
+.swatch.selected {
+    outline: white dotted 2px;
+    outline-offset: -2px;
+}
+
 .target {
     width: 70px;
     height: 70px;

@@ -1,12 +1,12 @@
 <style>
     {% include swatches.css %}
 </style>
-<h2> Yarn: Cottolin </h2>
+{% include {{page.yarn}}.html %}
 <h3> Stripe Pattern: {{page.pattern_name}} </h3>
 
 <div class="flex-container stripes">
   {% for stripe in page.stripes %}
-  <span class="color-{{stripe.color}} width-{{stripe.width}}"></span>
+  <span class="stripe color-{{stripe.color}} width-{{stripe.width}}" data-stripe="{{stripe.color}}"></span>
   {% endfor %}
 </div>
 
@@ -29,19 +29,21 @@
     </label>
     {% endfor %}
 </div>
+
+<p>
+    Click on one of the swatches below, then click on a stripe to change the color.
+</p>
 <div id="swatches">
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
-  let colors = {{ site.data.cottolin.colors | jsonify }};
+
+  var selectedColor;
   let color_name = function(color_code) {
     return colors.find(function(c) { return c.code == color_code; }).name;
   };
 
-  let bg = function(color) {
-    return `url("https://store.vavstuga.com/mm5/graphics/00000001/th-yarn-bock-cot-lin-22-2-${color}.jpg")`
-  };
 
   let pickColor = function(stripe, color) {
     var bgColor = bg(color);
@@ -51,41 +53,41 @@
     $(`.color-${stripe}`).css('background-image', bgColor);
   };
 
-  let noop = function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
-  let dragStart = function(e) {
-    e.originalEvent.dataTransfer.effectAllowed = 'copy';
-    e.originalEvent.dataTransfer.setData("text/plain", e.target.dataset.color);
-  };
-
-  let drop = function(e) {
-    noop(e);
-    e.originalEvent.dataTransfer.dropEffect = 'copy';
-    var color = e.originalEvent.dataTransfer.getData("text");
-    var stripe = $(e.target).data('stripe');
-    pickColor(stripe, color);
-  };
-
-  $('.target').bind('dragover', noop);
-  $('.target').bind('dragenter', noop);
-  $('.target').bind('drop', drop);
-
   let createSwatch = function(indx, color) {
     var swatch = $('<div class="swatch"></div>');
     swatch.attr('data-color', color.code);
     swatch.css('background-image', bg(color.code));
-    swatch.attr('draggable', true);
-    swatch.bind('dragstart', dragStart);
     swatch.attr('title', color.name);
     $('#swatches').append(swatch);
   };
   $.each(colors, createSwatch);
 
+  let selectColor = function(e) {
+    resetSelectedColor();
+    selectedColor = e.target.dataset.color;
+    $(e.target).addClass('selected');
+  };
+
+  let resetSelectedColor = function() {
+    selectedColor = null;
+    $('.swatch.selected').removeClass('selected');
+  };
+
+  let setColor = function(e) {
+    if(selectedColor) {
+      var stripe = e.target.dataset.stripe;
+      pickColor(stripe, selectedColor);
+      resetSelectedColor();
+    }
+  };
+
+  $('.swatch').click(selectColor);
+  $('.target').click(setColor);
+  $('.stripe').click(setColor);
+
   let setDefaults = function() {
     $.each(defaults, pickColor);
+    resetSelectedColor();
   };
   setDefaults();
   $('#reset-defaults').click(setDefaults);
